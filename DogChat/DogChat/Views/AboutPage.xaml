@@ -29,20 +29,22 @@
         </StackLayout>
         <ScrollView Grid.Row="1">
 
-            <StackLayout Orientation="Vertical" Padding="25,30,20,0" Spacing="0">
+            <StackLayout Orientation="Vertical" Padding="10,30,10,0" Spacing="0">
 
-                 <StackLayout Orientation="Horizontal" Padding="0" Spacing="0">
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" Margin="0,-20,0,0" >
 
-                        <Label Text="Set Delay: " FontSize="Title" VerticalTextAlignment="Center" />
-                    <Label Text="" FontSize="Large" x:Name="lblDelayValue" Margin="8,0,20,0" VerticalTextAlignment="Center" />
-                    <Stepper Value="15" WidthRequest="200" Minimum="1" Maximum="60" Increment="1" x:Name="stepper" ValueChanged="OnValueChanged" />
-                        
+                    <Label Text="Set Delay: " FontSize="18" VerticalTextAlignment="Center" />
+                    <Label Text="" FontSize="18" x:Name="lblDelayValue" Margin="8,0,20,0" VerticalTextAlignment="Center" />
+
+
                 </StackLayout>
+                
+                
 
-                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" HorizontalOptions="End" Margin="0,8,30,0">
-
-                    <RadioButton IsChecked="True" Content="Minutes" CheckedChanged="RadioButton_CheckedChangedMinutes" />
-                    <RadioButton Content="Seconds"  CheckedChanged="RadioButton_CheckedChangedSeconds" />
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" HorizontalOptions="End" Margin="0,0,30,0">
+                    <Stepper Value="15" WidthRequest="170" Minimum="1" Maximum="60" Increment="1" x:Name="stepper" ValueChanged="OnValueChanged" VerticalOptions="Center" HorizontalOptions="End"  Margin="0,10,0,0" />
+                    <RadioButton x:Name="radMin" IsChecked="True" FontSize="14" Content="Min." CheckedChanged="RadioButton_CheckedChangedMinutes"  VerticalOptions="Center" />
+                    <RadioButton x:Name="radSec" Content="Sec."  FontSize="14" CheckedChanged="RadioButton_CheckedChangedSeconds"  VerticalOptions="Center" />
 
                 </StackLayout>
 
@@ -62,23 +64,41 @@
                     <ImageButton Grid.Row="1" Grid.Column="0" Source="icon_about.png" BackgroundColor="Transparent" Clicked="PlayButtonClicked"></ImageButton>
                     <ImageButton Grid.Row="1" Grid.Column="1" Source="icon_about.png" BackgroundColor="Transparent" Clicked="PauseButtonClicked"></ImageButton>
                 </Grid>-->
-                <Button Margin="0,30,0,0" Text="Start" FontSize="Title" Clicked="Button_Clicked" HeightRequest="75"
-                        BackgroundColor="{StaticResource Primary}"
+
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0">
+                    <Button Margin="0,0,0,0" Text="Start" FontSize="20" Clicked="Button_Clicked" x:Name="StartBtn" HeightRequest="50" WidthRequest="200" 
+                        BackgroundColor="{StaticResource Primary}" VerticalOptions="Start" 
                         TextColor="White" />
 
-                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" Margin="0,30" >
+                    <Button Margin="10,0,0,0" Text="Stop" FontSize="14" Clicked="Button_ClickedStop" HeightRequest="50" 
+                        HorizontalOptions="End" VerticalOptions="Start" WidthRequest="80" 
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+                </StackLayout>
+                
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" Margin="0,10" >
 
-                    
-                    <Label Text="Loop Count: " FontSize="Title" VerticalTextAlignment="Center" />
-                    <Label FontSize="Large" x:Name="test" Margin="8,0,20,0" VerticalTextAlignment="Center" />
+
+                    <Label Text="Loop Count: " FontSize="16" VerticalTextAlignment="Center"  Margin="4,0,0,0" />
+                    <Label FontSize="16" x:Name="test" Margin="8,0,20,0" VerticalTextAlignment="Center" />
 
                 </StackLayout>
 
 
 
-                <Button Margin="0,55,0,0" Text="Stop" FontSize="Medium" Clicked="Button_ClickedStop" HeightRequest="40" HorizontalOptions="End" VerticalOptions="End" WidthRequest="100"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White" />
+                <StackLayout Padding="60,80,5,0" Orientation="Horizontal" Spacing="15" VerticalOptions="End" HorizontalOptions="End">
+                    <!--<StackLayout Orientation="Horizontal">
+                        <Switch x:Name="TimeoutSwitch" IsToggled="True" />
+                        <Label Text="Timeout after silence?" />
+                    </StackLayout>-->
+                    <Button VerticalOptions="End" x:Name="DelButton" Text="[X]" FontSize="14" HorizontalOptions="FillAndExpand" 
+                                        Clicked="Delete_Clicked" IsEnabled="True" HeightRequest="40" IsVisible="False" WidthRequest="47"  />
+                    <Button VerticalOptions="End" x:Name="RecordButton" Text="Record" FontSize="14" HorizontalOptions="FillAndExpand" Clicked="Record_Clicked" HeightRequest="40" WidthRequest="100"  />
+                    <Button VerticalOptions="End" x:Name="PlayButton" Text="Play" FontSize="14" HorizontalOptions="FillAndExpand" Clicked="Play_Clicked" IsEnabled="False" HeightRequest="40" IsVisible="False"  />
+                    
+                </StackLayout>
+
+
                 
             </StackLayout>
         </ScrollView>

@@ -1,7 +1,9 @@
 ﻿using MediaManager;
+using Plugin.AudioRecorder;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Timers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,10 +14,16 @@ namespace DogChat.Views
     {
         //string url = "https://ia800605.us.archive.org/32/items/Mp3Playlist_555/AaronNeville-CrazyLove.mp3";
         string url = @"C:\Users\tache\Documents\Sound recordings\Recording/m4a";
+        string defaultFilePath = "file:///android_asset/Recording.m4a";
+        string recordedFilePath = "";
         private static System.Timers.Timer aTimer;
         private int LoopCount = 0;
         private bool Running = true;
         private string DurationType= "Minutes";
+
+        AudioRecorderService recorder;
+        Plugin.AudioRecorder.AudioPlayer playerRec;
+
 
         public AboutPage()
         {
@@ -27,12 +35,132 @@ namespace DogChat.Views
             lblDelayValue.Text = stepper.Value.ToString();
 
             test.Text = "0";
+            LoopCount = 0;
 
+
+            recorder = new AudioRecorderService
+            {
+                StopRecordingAfterTimeout = true,
+                TotalAudioTimeout = TimeSpan.FromSeconds(15),
+                AudioSilenceTimeout = TimeSpan.FromSeconds(2)
+            };
+
+            playerRec = new Plugin.AudioRecorder.AudioPlayer();
+            playerRec.FinishedPlaying += Player_FinishedPlaying;
+            recorder.AudioInputReceived += recorder_AudioInputReceived;
             //public player = CrossMediaManager.Current.MediaPlayer;
             ////media.MediaItemFinished -= Current_MediaItemFinished;
 
         }
 
+
+        void Delete_Clicked(object sender, EventArgs e)
+        {
+            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CurrentRecording.wav");
+            if(File.Exists(fileName))
+                File.Delete(fileName);
+
+            DelButton.IsVisible = false;
+        }
+
+
+
+        void recorder_AudioInputReceived(object sender, string audioFile)
+        {
+
+            recordedFilePath = recorder.FilePath;
+            string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CurrentRecording.wav");
+            File.Copy(recorder.FilePath, fileName, true);
+            recordedFilePath = fileName;
+
+            DelButton.IsVisible = true;
+
+        }
+
+        async void Record_Clicked(object sender, EventArgs e)
+        {
+            await RecordAudio();
+        }
+
+
+        async Task RecordAudio()
+        {
+            try
+            {
+                if (!recorder.IsRecording) //Record button clicked
+                {
+                    recorder.StopRecordingOnSilence = false;// TimeoutSwitch.IsToggled;
+
+                    RecordButton.IsEnabled = false;
+                    PlayButton.IsEnabled = false;
+
+                    //start recording audio
+                    var audioRecordTask = await recorder.StartRecording();
+
+                    RecordButton.Text = "Stop Recording";
+                    RecordButton.IsEnabled = true;
+
+                    await audioRecordTask;
+
+                    RecordButton.Text = "Record";
+                    PlayButton.IsEnabled = true;
+
+                    //var filePath = recorder.GetAudioFilePath();
+                    //string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CurrentRecording.txt");
+                    //File.Copy(filePath, fileName);
+
+
+                }
+                else //Stop button clicked
+                {
+                    RecordButton.IsEnabled = false;
+
+                    //stop the recording...
+                    await recorder.StopRecording();
+
+
+                    RecordButton.IsEnabled = true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                //blow up the app!
+                throw ex;
+            }
+        }
+
+        void Play_Clicked(object sender, EventArgs e)
+        {
+            PlayAudioX();
+        }
+
+        void PlayAudioX()
+        {
+            try
+            {
+                var filePath = recorder.GetAudioFilePath();
+
+                if (filePath != null)
+                {
+                    PlayButton.IsEnabled = false;
+                    RecordButton.IsEnabled = false;
+
+                    playerRec.Play(filePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                //blow up the app!
+                throw ex;
+            }
+        }
+
+        void Player_FinishedPlaying(object sender, EventArgs e)
+        {
+            PlayButton.IsEnabled = true;
+            RecordButton.IsEnabled = true;
+        }
 
         private void StartTimer()
         {
@@ -71,15 +199,14 @@ namespace DogChat.Views
 
             //aTimer = new System.Timers.Timer(10000);
             //aTimer.Elapsed -= OnTimedEvent;
-            aTimer.Enabled = false;
+            if(aTimer!=null)
+                aTimer.Enabled = false;
 
         }
 
 
         private  void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-
-            
             PlayAudio();
         }
 
@@ -100,9 +227,17 @@ namespace DogChat.Views
             //SetTimer();
         }
 
-        private  void PlayAudio()
+        private  void PlayAudio(string filePath="")
         {
-             CrossMediaManager.Current.Play("file:///android_asset/Recording.m4a");
+            
+
+            if (CrossMediaManager.Current.IsPlaying() == true)
+                return;
+
+            if (File.Exists(recordedFilePath))
+                CrossMediaManager.Current.Play(recordedFilePath);
+            else
+                CrossMediaManager.Current.Play(defaultFilePath);
            
 
     }
@@ -110,7 +245,7 @@ namespace DogChat.Views
     private  void PlayButtonClicked(object sender, EventArgs e)
         {
 
-             CrossMediaManager.Current.Play("file:///android_asset/Recording.m4a");
+             CrossMediaManager.Current.Play(defaultFilePath);
             //await CrossMediaManager.Current.Play("android.resource://[PackageName]/raw/myfile", MediaFileType.Audio, ResourceAvailability.Local);
 
             //if (File.Exists("Test.mp3"))
@@ -122,7 +257,7 @@ namespace DogChat.Views
         private  void PauseButtonClicked(object sender, EventArgs e)
         {
 
-             CrossMediaManager.Current.Play("file:///android_asset/Recording.m4a");
+             CrossMediaManager.Current.Play(defaultFilePath);
             //await CrossMediaManager.Current.Play("android.resource://[PackageName]/raw/myfile", MediaFileType.Audio, ResourceAvailability.Local);
 
             //if (File.Exists("Test.mp3"))
@@ -132,8 +267,17 @@ namespace DogChat.Views
 
         private  void Button_Clicked(object sender, EventArgs e)
         {
+            test.Text = "0";
+            LoopCount = 0;
+
+            StartBtn.Text = "Running...";
+            StartBtn.TextColor = Color.Green;
+
             stepper.IsEnabled = false;
-            CrossMediaManager.Current.Play("file:///android_asset/Recording.m4a"); 
+            radMin.IsEnabled = false;
+            radSec.IsEnabled = false;
+            PlayAudio();
+            //CrossMediaManager.Current.Play(defaultFilePath); 
             StartTimer();
             
 
@@ -141,7 +285,13 @@ namespace DogChat.Views
 
         private void Button_ClickedStop(object sender, EventArgs e)
         {
+
+            StartBtn.Text = "Start";
+            StartBtn.TextColor = Color.White;
+
             stepper.IsEnabled = true;
+            radMin.IsEnabled = true;
+            radSec.IsEnabled = true;
             StopTimer();
 
         }

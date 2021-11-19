@@ -5,6 +5,10 @@ using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using MediaManager;
+using AndroidX.Core.Content;
+using Android;
+using AndroidX.Core.App;
+using Xamarin.Essentials;
 
 namespace DogChat.Droid
 {
@@ -19,6 +23,13 @@ namespace DogChat.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             CrossMediaManager.Current.Init(this);
+
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.RecordAudio) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new String[] { Manifest.Permission.RecordAudio }, 1);
+            }
+
+            DeviceDisplay.KeepScreenOn = true;
 
             LoadApplication(new App());
         }
