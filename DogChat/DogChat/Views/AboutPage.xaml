@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DogChat.Views.AboutPage"
+             xmlns:vm="clr-namespace:DogChat.ViewModels"
+             Title="Home">
+    
+    <ContentPage.BindingContext>
+        <vm:AboutViewModel />
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Accent">#96d1ff</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
+                <ContentView Padding="0,20,0,20" VerticalOptions="FillAndExpand">
+                    <Label Text="Dog Talk" FontSize="50"/>
+                </ContentView>
+            </StackLayout>
+        </StackLayout>
+        <ScrollView Grid.Row="1">
+
+            <StackLayout Orientation="Vertical" Padding="25,30,20,0" Spacing="0">
+
+                 <StackLayout Orientation="Horizontal" Padding="0" Spacing="0">
+
+                        <Label Text="Set Delay: " FontSize="Title" VerticalTextAlignment="Center" />
+                    <Label Text="" FontSize="Large" x:Name="lblDelayValue" Margin="8,0,20,0" VerticalTextAlignment="Center" />
+                    <Stepper Value="15" WidthRequest="200" Minimum="1" Maximum="60" Increment="1" x:Name="stepper" ValueChanged="OnValueChanged" />
+                        
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" HorizontalOptions="End" Margin="0,8,30,0">
+
+                    <RadioButton IsChecked="True" Content="Minutes" CheckedChanged="RadioButton_CheckedChangedMinutes" />
+                    <RadioButton Content="Seconds"  CheckedChanged="RadioButton_CheckedChangedSeconds" />
+
+                </StackLayout>
+
+                <!--<Label Text="Make changes to your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="0,0,0,0"/>-->
+                
+                <!--<Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <ImageButton Grid.Row="1" Grid.Column="0" Source="icon_about.png" BackgroundColor="Transparent" Clicked="PlayButtonClicked"></ImageButton>
+                    <ImageButton Grid.Row="1" Grid.Column="1" Source="icon_about.png" BackgroundColor="Transparent" Clicked="PauseButtonClicked"></ImageButton>
+                </Grid>-->
+                <Button Margin="0,30,0,0" Text="Start" FontSize="Title" Clicked="Button_Clicked" HeightRequest="75"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+
+                <StackLayout Orientation="Horizontal" Padding="0" Spacing="0" Margin="0,30" >
+
+                    
+                    <Label Text="Loop Count: " FontSize="Title" VerticalTextAlignment="Center" />
+                    <Label FontSize="Large" x:Name="test" Margin="8,0,20,0" VerticalTextAlignment="Center" />
+
+                </StackLayout>
+
+
+
+                <Button Margin="0,55,0,0" Text="Stop" FontSize="Medium" Clicked="Button_ClickedStop" HeightRequest="40" HorizontalOptions="End" VerticalOptions="End" WidthRequest="100"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White" />
+                
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>
