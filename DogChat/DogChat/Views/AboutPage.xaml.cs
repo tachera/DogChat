@@ -286,7 +286,10 @@ namespace DogChat.Views
         private void Button_ClickedStop(object sender, EventArgs e)
         {
 
-            StartBtn.Text = "Start";
+            if(CrossMediaManager.Current.IsPlaying())
+                CrossMediaManager.Current.Stop();
+
+           StartBtn.Text = "Start";
             StartBtn.TextColor = Color.White;
 
             stepper.IsEnabled = true;

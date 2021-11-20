@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DogChat.Android", "DogChat\DogChat.Android\DogChat.Android.csproj", "{DB195C11-A7AB-4AC1-9896-EB785FBE814D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DogChat", "DogChat\DogChat\DogChat.csproj", "{C02A9B9C-7C88-499A-B975-DE4ED8E52095}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DogTalk", "DogChat\DogChat\DogTalk.csproj", "{C02A9B9C-7C88-499A-B975-DE4ED8E52095}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

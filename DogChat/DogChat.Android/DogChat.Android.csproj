@@ -92,9 +92,9 @@
     <AndroidResource Include="Resources\drawable\icon_feed.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DogChat\DogChat.csproj">
-      <Project>{C3F29021-60C0-4BC3-B836-83F5828E1728}</Project>
-      <Name>DogChat</Name>
+    <ProjectReference Include="..\DogChat\DogTalk.csproj">
+      <Project>{C02A9B9C-7C88-499A-B975-DE4ED8E52095}</Project>
+      <Name>DogTalk</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
